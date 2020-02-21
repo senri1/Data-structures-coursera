@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
+#include <queue>
 #if defined(__unix__) || defined(__APPLE__)
 #include <sys/resource.h>
 #endif
@@ -28,26 +29,39 @@ int main_with_large_stack_space() {
   std::ios_base::sync_with_stdio(0);
   int n;
   std::cin >> n;
-
-  std::vector<Node> nodes;
-  nodes.resize(n);
+  std::queue<Node*> queue;
+  std::vector<Node> nodes(n);
+  Node* root;
+  
   for (int child_index = 0; child_index < n; child_index++) {
     int parent_index;
     std::cin >> parent_index;
-    if (parent_index >= 0)
+    if (parent_index >= 0) {
       nodes[child_index].setParent(&nodes[parent_index]);
+    }
+    else if(parent_index == -1) {
+      nodes[child_index].setParent(&nodes[parent_index]);
+      root = &nodes[child_index];
+    }
+      
     nodes[child_index].key = child_index;
   }
-
-  // Replace this code with a faster implementation
+  Node* parent;
   int maxHeight = 0;
-  for (int leaf_index = 0; leaf_index < n; leaf_index++) {
-    int height = 0;
-    for (Node *v = &nodes[leaf_index]; v != NULL; v = v->parent)
-      height++;
-    maxHeight = std::max(maxHeight, height);
-  }
-    
+  queue.push(root);
+
+  while(!queue.empty()) {
+    int size = queue.size();
+    while(size--){
+      parent = queue.front();
+      queue.pop();
+      for(auto child: parent->children){
+        queue.push(child);
+        }
+      }  
+    maxHeight++;
+    }
+  
   std::cout << maxHeight << std::endl;
   return 0;
 }
