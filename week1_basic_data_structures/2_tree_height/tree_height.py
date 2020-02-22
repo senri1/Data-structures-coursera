@@ -1,21 +1,49 @@
 # python3
+# cd .\Data-structures-coursera\week1_basic_data_structures\2_tree_height\  
 
 import sys
 import threading
+from collections import deque
 
+class Node():
+
+    def __init__(self):
+        self.parent = None
+        self.children = []
+
+    def set_parent(self, p):
+        self.parent = p
+        p.children.append(self)
+
+def construct_tree(n, parents):
+    tree = [Node()]*n
+    root = Node()
+    for idx, parent in enumerate(parents):
+        if parent >= 0:
+            tree[idx].set_parent(tree[parent])
+        else:
+            root = tree[idx]
+    return root
 
 def compute_height(n, parents):
-    # Replace this code with a faster implementation
-    max_height = 0
-    for vertex in range(n):
-        height = 0
-        current = vertex
-        while current != -1:
-            height += 1
-            current = parents[current]
-        max_height = max(max_height, height)
-    return max_height
-
+    if n == 1:
+        return 0
+    root = construct_tree(n, parents)
+    height = 0
+    size = 0
+    q = deque()
+    q.append(root)
+    while(len(q)!=0):
+        size = len(q)
+        print("Size is: {}".format(size))
+        for i in range(size):
+            #print("i is: {}".format(i))
+            node = q.popleft()
+            print("cildren length is: {}".format(len(node.children)))
+            for child in node.children:
+                q.append(child)
+        height += 1
+    return height
 
 def main():
     n = int(input())

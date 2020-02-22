@@ -32,18 +32,15 @@ int main_with_large_stack_space() {
   std::queue<Node*> queue;
   std::vector<Node> nodes(n);
   Node* root;
-  
+  int parent_index;
   for (int child_index = 0; child_index < n; child_index++) {
-    int parent_index;
     std::cin >> parent_index;
     if (parent_index >= 0) {
       nodes[child_index].setParent(&nodes[parent_index]);
     }
     else if(parent_index == -1) {
-      nodes[child_index].setParent(&nodes[parent_index]);
       root = &nodes[child_index];
     }
-      
     nodes[child_index].key = child_index;
   }
   Node* parent;
@@ -89,5 +86,5 @@ int main (int argc, char **argv)
   }
 
 #endif
-  return main_with_large_stack_space();
+return main_with_large_stack_space();
 }
